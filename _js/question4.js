@@ -148,13 +148,7 @@
 			while(tempNumber.length < (aLessThanB ? b.length : a.length)) {
 				tempNumber += tempNumber[0];	
 			}
-			//put longer number in front if its value equals to padded shorter number
-			if(tempNumber == b || tempNumber == a) {
-				return +b - +a;
-				//put number with higher value (by comparing longer number with padded shorter number)
-			} else {
-				return aLessThanB ? +b - +tempNumber : +tempNumber - +a;
-			}
+			return aLessThanB ? +b - +tempNumber : +tempNumber - +a;
 		}
 		const numberStrings = [50, 2, 1, 9].map(a => a.toString());
 		//find largest number using permutation method
