@@ -9,12 +9,15 @@
 		 */
 		console.log("Question 2:");
 		 
-		//concatenate two lists alternatingly 
-		function concatList(list1, list2) {
-			let result = [];
-			for(let i = 0; i < list1.length; i++) result.push(list1[i], list2[i]);
-			return result;	
+		//mix two lists 
+		function mixList(list1, list2) {
+			let mixed = [];
+			let [long, short] = list1.length >= list2.length ? [list1, list2] : [list2, list1];
+			for(let i = 0; i < short.length; i++) {
+				mixed.push(long[i], short[i]);
+			}
+			return mixed;
 		}
-		console.log(`concatList(["a", "b", "c"], [1, 2, 3]) -> ${concatList(["a", "b", "c"], [1, 2, 3])}`);	
+		console.log(`%c["a", "b", "c"] + [1, 2, 3] -> %c[${mixList(["a", "b", "c"], [1, 2, 3]).join(", ")}]`, "color : skyblue;", "color : orange;");	
 	});
 })();

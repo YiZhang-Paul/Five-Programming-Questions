@@ -9,34 +9,35 @@
 		console.log("Question 1:");
 		 
 		//using higher order function 
-		function sum1(...numList) {
-			return numList.reduce((acc, val) => acc + val);
+		function sum1(...numbers) {
+			return numbers.reduce((acc, val) => acc + val);
 		}
-		console.log(`sum1(1, 3, 5, 7, 9) -> ${sum1(1, 3, 5, 7, 9)}`);
+		console.log(`%c1 + 3 + 5 + 7 + 9 -> %c${sum1(1, 3, 5, 7, 9)}`, "color : skyblue;", "color : orange;");
 		
 		//for-loop
-		function sum2(...numList) {
+		function sum2(...numbers) {
 			let sum = 0;
-			for(let i = 0; i < numList.length; i++) sum += numList[i];
-			return sum;
-		}
-		console.log(`sum2(1, 3, 5, 7, 9) -> ${sum2(1, 3, 5, 7, 9)}`);
-		
-		//while-loop
-		function sum3(...numList) {
-			let sum = 0, i = 0;
-			while(i < numList.length) {
-				sum += numList[i];
-				i++;
+			for(let i = 0; i < numbers.length; i++) {
+				sum += numbers[i];
 			}
 			return sum;
 		}
-		console.log(`sum3(1, 3, 5, 7, 9) -> ${sum3(1, 3, 5, 7, 9)}`);
+		console.log(`%c1 + 3 + 5 + 7 + 9 -> %c${sum1(1, 3, 5, 7, 9)}`, "color : skyblue;", "color : orange;");
+		
+		//while-loop
+		function sum3(...numbers) {
+			let sum = 0, counter = 0;
+			while(counter < numbers.length) {
+				sum += numbers[counter++];
+			}
+			return sum;
+		}
+		console.log(`%c1 + 3 + 5 + 7 + 9 -> %c${sum1(1, 3, 5, 7, 9)}`, "color : skyblue;", "color : orange;");
 		
 		//recursion
-		function sum4(...numList) {
-			return numList.length == 1 ? numList[0] : numList.pop() + sum4(...numList);
+		function sum4(...numbers) {
+			return numbers.length == 1 ? numbers[0] : numbers[0] + sum4(...numbers.slice(1));
 		}
-		console.log(`sum4(1, 3, 5, 7, 9) -> ${sum4(1, 3, 5, 7, 9)}`);	
+		console.log(`%c1 + 3 + 5 + 7 + 9 -> %c${sum1(1, 3, 5, 7, 9)}`, "color : skyblue;", "color : orange;");	
 	});
 })();
