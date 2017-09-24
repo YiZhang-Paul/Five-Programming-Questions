@@ -9,158 +9,108 @@
 		 */
 		console.log("Question 4:"); 
 
-		//permutation of all numbers without re-using numbers
-		function permuteNumbers1(numbers, counter, curPattern) {
-			if(curPattern.length == counter) {
-				return curPattern;
+		const numbers = [50, 2, 1, 9];
+
+		//brute-force permutation method
+		function permuteNum1(digits, curNum = "") {
+			if(!digits.length) {
+				return [curNum];
 			}
-			let permutations = [];
-			for(let i = 0; i < numbers.length; i++) {
-				//number used and remaining numbers
-				let curNumber = numbers[i];
-				let otherNumbers = [...numbers.slice(0, i), ...numbers.slice(i + 1)];
-				//attach current number used to current pattern
-				let result = permuteNumbers1(otherNumbers, counter, curPattern + curNumber);
-				if(Array.isArray(result)) {
-					permutations.push(...result);
-				} else {
-					permutations.push(result);
-				}
-			}	
-			return permutations;
+			let permute = [];
+			for(let i = 0; i < digits.length; i++) {
+				permute.push(...permuteNum1([...digits.slice(0, i), ...digits.slice(i + 1)], curNum + digits[i]));
+			}
+			return permute;
 		}
 
-		//another permutation function in backward direction 
-		function permuteNumbers2(numbers) {
-			if(numbers.length == 1) {
-				return numbers;
+		function maxNumber1(digits) {
+			return Math.max(...permuteNum1(digits).map(Number));
+		}
+		console.log(`%c[50, 2, 1, 9] -> %c${maxNumber1(numbers)}`, "color : skyblue;", "color : orange;");
+
+		//another brute-force permutation method
+		function permuteNum2(digits) {
+			if(digits.length == 1) {
+				return digits;
 			}
-			let permutations = [];
-			for(let i = 0; i < numbers.length; i++) {
-				//number used and remaining numbers
-				let curNumber = numbers[i];
-				let otherNumbers = [...numbers.slice(0, i), ...numbers.slice(i + 1)];
-				//combine permutations backwards when bottom of function stack returns
-				for(let numSegment of permuteNumbers2(otherNumbers)) {
-					permutations.push(curNumber + numSegment);
-				} 
+			let permute = [];
+			for(let i = 0; i < digits.length; i++) {
+				for(let numSlice of permuteNum2([...digits.slice(0, i), ...digits.slice(i + 1)])) {
+					permute.push(digits[i] * Math.pow(10, String(numSlice).length) + numSlice);
+				}
 			}
-			return permutations;
+			return permute;
 		}
 
-		/**
-		 * Steinhaus Johnson Trotter Algorithm
-		 * has the ability to stop generating permutations 
-		 * at any point and resume generating the rest of 
-		 * permutations at later point
-		 */
-		function steinhausPermute(array) {
-			//determine if a number on given index is a mobile number
-			function isMobile(index) {
-				let curNum = curArr[index];
-				let nextNum = curArr[index + dirArr[index]];
-				return nextNum && +curNum > +nextNum;
-			}
-			//find maximum mobile number
-			function maxMobileIndex() {
-				for(let i = sortedArr.length - 1; i >= 0; i--) {
-					let index = curArr.indexOf(sortedArr[i]);
-					if(isMobile(index)) {
-						return index;
-					}
+		function maxNumber2(digits) {
+			return Math.max(...permuteNum2(digits).map(Number));
+		}
+		console.log(`%c[50, 2, 1, 9] -> %c${maxNumber2(numbers)}`, "color : skyblue;", "color : orange;");
+
+		//find maximum number by padding digits
+		function padNumber(number, maxLen) {
+			const numStr = String(number);
+			return numStr.length < maxLen ? Number(number + numStr[0].repeat(maxLen - numStr.length)) : number;
+		}
+		
+		function maxNumber3(digits) {
+			const maxLen = String(Math.max(...digits)).length;
+			return Number(digits.slice().sort((a, b) => padNumber(b, maxLen) - padNumber(a, maxLen)).join(""));
+		}
+		console.log(`%c[50, 2, 1, 9] -> %c${maxNumber3(numbers)}`, "color : skyblue;", "color : orange;");
+		
+		//find maximum using Steinhaus Johnson Trotter Algorithm
+		//check if a number is mobile number
+		function isMobile(index, numbers, directions) {
+			let curNum = numbers[index];
+			let nextNum = numbers[index + directions[index]];
+			return nextNum && curNum > nextNum;
+		}
+		//get index of maximum mobile number
+		function maxMobileIndex(numbers, ascNumbers, directions) {
+			for(let i = ascNumbers.length - 1; i >= 0; i--) {
+				let index = numbers.indexOf(ascNumbers[i]);
+				if(isMobile(index, numbers, directions)) {
+					return index;
 				}
-				return -1;
 			}
-			//swap elements between two indexes 
-			function swapIndex(array, index1, index2) {
-				let temp = array[index1];
-				array[index1] = array[index2];
-				array[index2] = temp;
-			}
-			//move a mobile number towards its direction
-			function moveNum(index) {
-				let nextIndex = index + dirArr[index];
-				swapIndex(curArr, index, nextIndex);
-				swapIndex(dirArr, index, nextIndex);
-			}
-			/** 
-			 * find all integers that are larger than 
-			 * current maximum mobile number and change 
-			 * all their directions
-			 */
-			function flipNum(curNum) {
-				curArr.forEach((number, index) => {
-					if(+number > curNum) dirArr[index] *= -1;
-				});
-			}
-			//find permutations
-			function permute() {
-				"use strict";
-				//record total time of permutation thus far
-				curPermute++;
-				let curMobile = maxMobileIndex();
-				/**
-				 * stop permutation when limit reached (to avoid stack size error)
-				 * or no mobile number exists
-				 */
-				if(curPermute == permuteLimit || curMobile === -1) {
-					return;
+			return -1;
+		}
+		//swap elements between two indexes
+		function swapIndex(array, index1, index2) {
+			[array[index1], array[index2]] = [array[index2], array[index1]];
+		}
+		//move a mobile number
+		function moveNumber(index, numbers, directions) {
+			const nextIndex = index + directions[index];
+			swapIndex(numbers, index, nextIndex);
+			swapIndex(directions, index, nextIndex);
+		}
+		//flip directions of all integers larger than current maximum mobile number
+		function flipNumbers(maxNumber, numbers, directions) {
+			numbers.forEach((number, index) => {
+				if(number > maxNumber) {
+					directions[index] *= -1;
 				}
-				let curNum = curArr[curMobile];
-				//move current mobile number and record new permutation
-				moveNum(curMobile);
-				permutations.push(curArr.join(""));
-				//change direction of all larger integers after every move
-				flipNum(curNum);
-				return permute();
+			});
+		}
+		//find permutations 
+		function permuteNum3(numbers, ascNumbers, directions, permute = []) {
+			const mobileIndex = maxMobileIndex(numbers, ascNumbers, directions);
+			if(mobileIndex == -1) {
+				return [ascNumbers.join(""), ...permute];
 			}
-			//sorted array from lowest to highest
-			let sortedArr = array.sort((a, b) => +a - +b);
-			//current array default from sorted array
-			let curArr = sortedArr.slice();
-			//array recording directions for all numbers
-			let dirArr = new Array(array.length).fill(-1);
-			//current permutations (default array is one of the permutations too!)
-			let permutations = [curArr.join("")];
-			//find total number of possible permutations (including duplicate entries)
-			let factorial = n => n > 1 ? n * factorial(n - 1) : 1;
-			const allPermute = factorial(array.length);
-			//break down function calls and produce permutations in segments
-			let curPermute = 0, permuteLimit = 0;
-			for(let i = 0; i < Math.ceil(allPermute / 5000); i++) {
-				permuteLimit = (i + 1) * 5000;
-				permute();
-			}
-			//return final result
-			return permutations;
+			const curNum = numbers[mobileIndex];
+			moveNumber(mobileIndex, numbers, directions);
+			flipNumbers(curNum, numbers, directions);
+			return permuteNum3(numbers, ascNumbers, directions, [...permute, numbers.join("")]);
 		}
 
-		/**
-		 * sort given number array to form largest possible number left to right
-		 */
-		function sortNumbers(a, b) {
-			let aLessThanB = a.length < b.length;
-			/**
-			 * pad shorter number to equal lengths using left most digit 
-			 * e.g when comparing 50 and 5529, pad 50 with 5 to 5055
-			 */
-			let tempNumber = aLessThanB ? a.slice() : b.slice();
-			while(tempNumber.length < (aLessThanB ? b.length : a.length)) {
-				tempNumber += tempNumber[0];	
-			}
-			return aLessThanB ? +b - +tempNumber : +tempNumber - +a;
+		function maxNumber4(digits) {
+			let ascNumbers = digits.slice().sort((a, b) => a - b);
+			let directions = new Array(digits.length).fill(-1);
+			return Math.max(...permuteNum3(ascNumbers.slice(), ascNumbers, directions).map(Number));
 		}
-		const numberStrings = [50, 2, 1, 9].map(a => a.toString());
-		//find largest number using permutation method
-		let largestNumber1 = permuteNumbers1(numberStrings, numberStrings.join("").length, "").sort((a, b) => +b - +a)[0];
-		console.log(`The largest number is: ${largestNumber1}`);
-		let largestNumber2 = permuteNumbers2(numberStrings).sort((a, b) => +b - +a)[0];
-		console.log(`The largest number is: ${largestNumber2}`);
-		//using steinhaus permutation algorithm
-		let largestNumber3 = steinhausPermute(numberStrings.slice()).sort((a, b) => +b - +a)[0];
-		console.log(`The largest number is: ${largestNumber3}`);
-		//find largest number using sorting method
-		let largestNumber4 = numberStrings.slice().sort(sortNumbers).join("");
-		console.log(`The largest number is: ${largestNumber4}`);	
+		console.log(`%c[50, 2, 1, 9] -> %c${maxNumber4(numbers)}`, "color : skyblue;", "color : orange;");
 	});
 })();
