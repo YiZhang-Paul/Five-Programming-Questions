@@ -4,6 +4,7 @@
 #include "header/question1.h"
 #include "header/question2.h"
 #include "header/question3.h"
+#include "header/question4.h"
 
 int main(void) {
 
@@ -39,6 +40,10 @@ int main(void) {
     printf("\n");
 
     free(fibonacci);
+
+    //question 4
+    int values[] = { 50, 2, 1, 9 };
+    printf("%d\n", findMaxValue(values, 4));
 
     return 0;
 }
