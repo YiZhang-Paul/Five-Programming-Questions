@@ -1,0 +1,14 @@
+{
+    "code-runner.executorMap": {
+        "c": "cd $workspaceRoot && gcc -g *.c -o main && $workspaceRoot/main"
+    },
+    "files.associations": {
+        "question1.h": "c",
+        "question2.h": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
+        "question3.h": "c",
+        "limits.h": "c"
+    }
+}
