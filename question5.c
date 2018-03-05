@@ -47,13 +47,37 @@ static char ** permute(char * options, int total, int * permuteCount) {
     return permutes;
 }
 
-void findEquations(char * operators, int * numbers, int total) {
+static int isValidEquation(char * operators, int * numbers, int total, int target) {
 
-    int totalPermute = 0;
-    char **permutes = permute(operators, total - 1, &totalPermute);
+    return 1;
+}
 
-    for(int i = 0; i < totalPermute; i++) {
+static void printEquation(char * operators, int * numbers, int target) {
 
-        printf("%s\n", permutes[i]);
+    for(int i = 0; i < strlen(operators); i++) {
+
+        printf("%d", numbers[i]);
+
+        if(operators[i] != ' ') {
+
+            printf(" %c ", operators[i]);
+        }
+    }
+
+    printf("%d = %d", numbers[strlen(operators)], target);
+}
+
+void findEquations(char * operators, int * numbers, int total, int target) {
+
+    int permuteCount = 0;
+    char **permutes = permute(operators, total - 1, &permuteCount);
+
+    for(int i = 0; i < permuteCount; i++) {
+
+        if(isValidEquation(permutes[i], numbers, total, target)) {
+
+            printEquation(permutes[i], numbers, target);
+            printf("\n");
+        }
     }
 }

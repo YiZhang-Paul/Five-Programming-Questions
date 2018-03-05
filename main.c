@@ -49,7 +49,7 @@ int main(void) {
     //question 5
     char operators[] = "+- ";
     int inputs[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    findEquations(operators, inputs, 9);
+    findEquations(operators, inputs, 9, 100);
 
     return 0;
 }
