@@ -19,12 +19,10 @@ static int padDigits(int number, int total) {
 
     int length = countDigits(number);
 
-    if(length < total) {
+    while(length < total) {
 
-        for(int i = 0; i < total - length; i++) {
-
-            number = number * 10 + number % 10;
-        }
+        number = number * 10 + number % 10;
+        length++;
     }
 
     return number;
