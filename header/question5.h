@@ -4,6 +4,9 @@
 static char * copy(char *);
 static void startPermute(char *, int, int, char *, char **, int *);
 static char ** permute(char *, int, int *);
+static int * getOperands(char *, int *, int);
+static int isValidEquation(char *, int *, int, int);
+static void printEquation(char *, int *, int);
 void findEquations(char *, int *, int, int);
 
 #endif

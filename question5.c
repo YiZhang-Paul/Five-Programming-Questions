@@ -47,9 +47,49 @@ static char ** permute(char * options, int total, int * permuteCount) {
     return permutes;
 }
 
+static int * getOperands(char * operators, int * numbers, int total) {
+
+    int *operands = malloc(sizeof *operands * total);
+    int operand = *numbers;
+    int counter = 0;
+
+    for(int i = 0; i < strlen(operators); i++) {
+
+        if(operators[i] != ' ') {
+
+            operands[counter++] = operand;
+            operand = numbers[i + 1];
+
+            continue;
+        }
+
+        operand = operand * 10 + numbers[i + 1];
+    }
+
+    if(operand > 0) {
+
+        operands[counter] = operand;
+    }
+
+    return operands;
+}
+
 static int isValidEquation(char * operators, int * numbers, int total, int target) {
 
-    return 1;
+    int *operands = getOperands(operators, numbers, total);
+    int sum = *operands;
+
+    for(int i = 0, j = 1; i < strlen(operators); i++) {
+
+        if(operators[i] != ' ') {
+
+            sum += operands[j++] * (operators[i] == '+' ? 1 : -1);
+        }
+    }
+
+    free(operands);
+
+    return sum == target;
 }
 
 static void printEquation(char * operators, int * numbers, int target) {
