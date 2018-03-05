@@ -10,39 +10,39 @@
  * For example: 1 + 2 + 34 – 5 + 67 – 8 + 9 = 100.
  */
 
-static char * copy(char * text) {
+static char * copyText(char * text) {
 
-    char *copied = malloc(strlen(text) + 1);
+    char *copy = malloc(strlen(text) + 1);
 
-    return strcpy(copied, text);
+    return strcpy(copy, text);
 }
 
-static void startPermute(char * options, int total, int counter, char * current, char ** permutes, int * permuteCount) {
+static void nextPermute(char * options, int length, int currentLength, char * currentPermute, char ** allPermutes, int * counter) {
 
-    if(counter == total) {
+    if(currentLength == length) {
 
-        permutes[(*permuteCount)++] = copy(current);
+        allPermutes[(*counter)++] = copyText(currentPermute);
 
         return;
     }
 
     for(int i = 0; i < strlen(options); i++) {
 
-        current[counter] = options[i];
-        startPermute(options, total, counter + 1, current, permutes, permuteCount);
+        currentPermute[currentLength] = options[i];
+        nextPermute(options, length, currentLength + 1, currentPermute, allPermutes, counter);
     }
 }
 
-static char ** permute(char * options, int total, int * permuteCount) {
+static char ** permute(char * options, int length, int * counter) {
 
-    const int totalPermute = (int)(pow(strlen(options), total) + 0.5);
-    char **permutes = malloc(sizeof *permutes * totalPermute);
-    char *current = malloc(total + 1);
-    current[total] = '\0';
+    const int total = (int)(pow(strlen(options), length) + 0.5);
+    char **permutes = malloc(sizeof *permutes * total);
+    char *currentPermute = malloc(length + 1);
+    currentPermute[length] = '\0';
 
-    startPermute(options, total, 0, current, permutes, permuteCount);
+    nextPermute(options, length, 0, currentPermute, permutes, counter);
 
-    free(current);
+    free(currentPermute);
 
     return permutes;
 }
@@ -50,31 +50,24 @@ static char ** permute(char * options, int total, int * permuteCount) {
 static int * getOperands(char * operators, int * numbers, int total) {
 
     int *operands = malloc(sizeof *operands * total);
-    int operand = *numbers;
-    int counter = 0;
 
-    for(int i = 0; i < strlen(operators); i++) {
+    for(int i = 0, j = 0, operand = *numbers; i <= strlen(operators); i++) {
 
-        if(operators[i] != ' ') {
+        if(i >= strlen(operators) || operators[i] != ' ') {
 
-            operands[counter++] = operand;
-            operand = numbers[i + 1];
+            operands[j++] = operand;
+            operand = i >= strlen(operators) ? 0 : numbers[i + 1];
 
             continue;
         }
-
+        //combine digits to current operand when space operator is encountered
         operand = operand * 10 + numbers[i + 1];
-    }
-
-    if(operand > 0) {
-
-        operands[counter] = operand;
     }
 
     return operands;
 }
 
-static int isValidEquation(char * operators, int * numbers, int total, int target) {
+static int isValidEquation(char * operators, int * numbers, int total, int targetSum) {
 
     int *operands = getOperands(operators, numbers, total);
     int sum = *operands;
@@ -89,10 +82,10 @@ static int isValidEquation(char * operators, int * numbers, int total, int targe
 
     free(operands);
 
-    return sum == target;
+    return sum == targetSum;
 }
 
-static void printEquation(char * operators, int * numbers, int target) {
+static void printEquation(char * operators, int * numbers, int targetSum) {
 
     for(int i = 0; i < strlen(operators); i++) {
 
@@ -104,19 +97,19 @@ static void printEquation(char * operators, int * numbers, int target) {
         }
     }
 
-    printf("%d = %d", numbers[strlen(operators)], target);
+    printf("%d = %d", numbers[strlen(operators)], targetSum);
 }
 
-void findEquations(char * operators, int * numbers, int total, int target) {
+void findEquations(char * operators, int * numbers, int total, int targetSum) {
 
-    int permuteCount = 0;
-    char **permutes = permute(operators, total - 1, &permuteCount);
+    int counter = 0;
+    char **permutes = permute(operators, total - 1, &counter);
 
-    for(int i = 0; i < permuteCount; i++) {
+    for(int i = 0; i < counter; i++) {
 
-        if(isValidEquation(permutes[i], numbers, total, target)) {
+        if(isValidEquation(permutes[i], numbers, total, targetSum)) {
 
-            printEquation(permutes[i], numbers, target);
+            printEquation(permutes[i], numbers, targetSum);
             printf("\n");
         }
     }

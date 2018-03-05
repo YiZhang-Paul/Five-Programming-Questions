@@ -5,7 +5,7 @@
  * a given list using a for-loop, a while-loop, and recursion.
  */
 
-int sumWithFor(int * numbers, int total) {
+int sumWithForLoop(int * numbers, int total) {
 
     int sum = 0;
 
@@ -17,15 +17,15 @@ int sumWithFor(int * numbers, int total) {
     return sum;
 }
 
-int sumWithWhile(int * numbers, int total) {
+int sumWithWhileLoop(int * numbers, int total) {
 
     int sum = 0;
-    int *currentValue = numbers;
-    int *lastValue = numbers + total - 1;
+    int *number = numbers;
 
-    while(currentValue <= lastValue) {
+    while(total) {
 
-        sum += *currentValue++;
+        sum += *number++;
+        total--;
     }
 
     return sum;

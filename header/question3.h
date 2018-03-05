@@ -10,10 +10,10 @@ struct bigNumber {
 };
 
 static struct bigNumber * toBigNumber(int);
-static struct bigNumber * copyBigNumber(struct bigNumber *);
-static void addDigit(struct bigNumber *, int, int);
-static struct bigNumber * addBigNumber(struct bigNumber *, struct bigNumber *);
-void printBigNumber(struct bigNumber *);
+static struct bigNumber * copy(struct bigNumber *);
+static void addDigitAtIndex(struct bigNumber *, int, int);
+static struct bigNumber * sum(struct bigNumber *, struct bigNumber *);
+void printDigits(struct bigNumber *);
 struct bigNumber * getFibonacci(int);
 
 #endif

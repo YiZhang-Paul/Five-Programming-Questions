@@ -10,14 +10,15 @@
  * For example, given [50, 2, 1, 9], the largest formed number is 95021.
  */
 
-static int countDigits(int number) {
+static int getLength(int number) {
 
     return floor(log10(number)) + 1;
 }
 
-static int padDigits(int number, int total) {
+//pad number with its rightmost digit to given length
+static int padWithLastDigit(int number, int total) {
 
-    int length = countDigits(number);
+    int length = getLength(number);
 
     while(length < total) {
 
@@ -28,13 +29,14 @@ static int padDigits(int number, int total) {
     return number;
 }
 
-static int joinNumbers(int * numbers, int total) {
+//concat numbers in an array to form a new number
+static int join(int * numbers, int total) {
 
     int joined = numbers[total - 1];
 
     for(int i = total - 2; i >= 0; i--) {
 
-        joined += (int)(pow(10, countDigits(joined)) + 0.5) * numbers[i];
+        joined += (int)(pow(10, getLength(joined)) + 0.5) * numbers[i];
     }
 
     return joined;
@@ -44,14 +46,14 @@ static int compare(const void * a, const void * b) {
 
     int *valueA = (int *)a;
     int *valueB = (int *)b;
-    int maxLength = MAX(countDigits(*valueA), countDigits(*valueB));
+    const int length = MAX(getLength(*valueA), getLength(*valueB));
 
-    return padDigits(*valueB, maxLength) - padDigits(*valueA, maxLength);
+    return padWithLastDigit(*valueB, length) - padWithLastDigit(*valueA, length);
 }
 
 int findMaxValue(int * numbers, int total) {
-
+    //ensure each digit on left is as large as possible
     qsort(numbers, total, sizeof(int), compare);
 
-    return joinNumbers(numbers, total);
+    return join(numbers, total);
 }

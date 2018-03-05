@@ -1,8 +1,8 @@
 #ifndef QUESTION_5_H
 #define QUESTION_5_H
 
-static char * copy(char *);
-static void startPermute(char *, int, int, char *, char **, int *);
+static char * copyText(char *);
+static void nextPermute(char *, int, int, char *, char **, int *);
 static char ** permute(char *, int, int *);
 static int * getOperands(char *, int *, int);
 static int isValidEquation(char *, int *, int, int);

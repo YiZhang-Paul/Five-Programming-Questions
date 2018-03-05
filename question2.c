@@ -9,18 +9,18 @@
  * the function should return [a, 1, b, 2, c, 3].
  */
 
-int * combine(int * list1, int list1Total, int * list2, int list2Total) {
+int * combine(int * list1, int list1Length, int * list2, int list2Length) {
 
-    int *combined = malloc(sizeof(int) * (list1Total + list2Total));
+    int *combined = malloc(sizeof *combined * (list1Length + list2Length));
+    //ensure all elements in both arrays are included
+    for(int i = 0, j = 0; i < MAX(list1Length, list2Length); i++) {
 
-    for(int i = 0, j = 0; i < MAX(list1Total, list2Total); i++) {
-
-        if(i < list1Total) {
+        if(i < list1Length) {
 
             combined[j++] = list1[i];
         }
 
-        if(i < list2Total) {
+        if(i < list2Length) {
 
             combined[j++] = list2[i];
         }

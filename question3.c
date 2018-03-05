@@ -12,42 +12,38 @@
 
 static struct bigNumber * toBigNumber(int value) {
 
-    struct bigNumber *number = malloc(sizeof(struct bigNumber));
-
-    if(value == 0) {
-
-        number->length = 1;
-        number->digits[0] = 0;
-
-        return number;
-    }
-
+    struct bigNumber *number = malloc(sizeof *number);
     number->length = 0;
 
-    while(value != 0) {
-
+    do {
+        //value of 0 has a length of 1
         number->digits[number->length++] = value % 10;
         value = (value - value % 10) / 10;
-    }
+
+    } while(value != 0);
 
     return number;
 }
 
-static struct bigNumber * copyBigNumber(struct bigNumber * number) {
+static struct bigNumber * copy(struct bigNumber * number) {
 
-    struct bigNumber *copy = malloc(sizeof(struct bigNumber));
-    copy->length = number->length;
+    struct bigNumber *copied = malloc(sizeof *copied);
+    copied->length = number->length;
 
-    for(int i = 0; i < copy->length; i++) {
+    for(int i = 0; i < copied->length; i++) {
 
-        copy->digits[i] = number->digits[i];
+        copied->digits[i] = number->digits[i];
     }
 
-    return copy;
+    return copied;
 }
 
-static void addDigit(struct bigNumber * number, int digit, int index) {
-
+/**
+ * add a digit between 0-9 at given index.
+ * e.g. adding 2 at index 1 of 222 means 242, rather than 2222(it does not mean insert)
+ */
+static void addDigitAtIndex(struct bigNumber * number, int digit, int index) {
+    //when adding digit results in new number length
     if(index > number->length - 1) {
 
         number->digits[index] = digit;
@@ -66,24 +62,24 @@ static void addDigit(struct bigNumber * number, int digit, int index) {
     number->digits[index] = sum % 10;
 
     if(sum > 9) {
-
-        addDigit(number, sum / 10, index + 1);
+        //carry over
+        addDigitAtIndex(number, sum / 10, index + 1);
     }
 }
 
-static struct bigNumber * addBigNumber(struct bigNumber * number1, struct bigNumber * number2) {
+static struct bigNumber * sum(struct bigNumber * number1, struct bigNumber * number2) {
 
-    struct bigNumber *sum = copyBigNumber(number1);
+    struct bigNumber *result = copy(number1);
 
     for(int i = 0; i < number2->length; i++) {
 
-        addDigit(sum, number2->digits[i], i);
+        addDigitAtIndex(result, number2->digits[i], i);
     }
 
-    return sum;
+    return result;
 }
 
-void printBigNumber(struct bigNumber * number) {
+void printDigits(struct bigNumber * number) {
 
     for(int i = number->length - 1; i >= 0; i--) {
 
@@ -91,9 +87,10 @@ void printBigNumber(struct bigNumber * number) {
     }
 }
 
+//retrieve first N terms of fibonacci sequence
 struct bigNumber * getFibonacci(int total) {
 
-    struct bigNumber *fibonacci = malloc(sizeof(struct bigNumber) * total);
+    struct bigNumber *fibonacci = malloc(sizeof *fibonacci * total);
 
     for(int i = 0; i < total; i++) {
 
@@ -104,7 +101,7 @@ struct bigNumber * getFibonacci(int total) {
             continue;
         }
 
-        fibonacci[i] = *addBigNumber(&fibonacci[i - 1], &fibonacci[i - 2]);
+        fibonacci[i] = *sum(&fibonacci[i - 1], &fibonacci[i - 2]);
     }
 
     return fibonacci;
