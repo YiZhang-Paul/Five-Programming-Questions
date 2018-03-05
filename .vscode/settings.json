@@ -9,6 +9,7 @@
         "string.h": "c",
         "stdlib.h": "c",
         "question3.h": "c",
-        "limits.h": "c"
+        "limits.h": "c",
+        "question4.h": "c"
     }
 }

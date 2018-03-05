@@ -5,6 +5,7 @@
 #include "header/question2.h"
 #include "header/question3.h"
 #include "header/question4.h"
+#include "header/question5.h"
 
 int main(void) {
 
@@ -44,6 +45,11 @@ int main(void) {
     //question 4
     int values[] = { 50, 2, 1, 9 };
     printf("%d\n", findMaxValue(values, 4));
+
+    //question 5
+    char operators[] = "+- ";
+    int inputs[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    findEquations(operators, inputs, 9);
 
     return 0;
 }
