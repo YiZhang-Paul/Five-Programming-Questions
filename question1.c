@@ -20,11 +20,10 @@ int sumWithForLoop(int * numbers, int total) {
 int sumWithWhileLoop(int * numbers, int total) {
 
     int sum = 0;
-    int *number = numbers;
 
     while(total) {
 
-        sum += *number++;
+        sum += *numbers++;
         total--;
     }
 
